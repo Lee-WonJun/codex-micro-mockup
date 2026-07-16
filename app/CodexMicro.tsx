@@ -177,10 +177,10 @@ function useAudio() {
     (kind: SoundKind) => {
       const context = unlock();
       const settings = {
-        press: { frequency: 148, duration: 0.055, volume: 0.028, type: "sine" },
-        release: { frequency: 218, duration: 0.045, volume: 0.018, type: "triangle" },
-        tick: { frequency: 510, duration: 0.022, volume: 0.012, type: "triangle" },
-        sensor: { frequency: 326, duration: 0.075, volume: 0.022, type: "sine" },
+        press: { frequency: 148, duration: 0.055, volume: 0.06, type: "sine" },
+        release: { frequency: 218, duration: 0.045, volume: 0.04, type: "triangle" },
+        tick: { frequency: 510, duration: 0.022, volume: 0.026, type: "triangle" },
+        sensor: { frequency: 326, duration: 0.075, volume: 0.05, type: "sine" },
       }[kind] as {
         frequency: number;
         duration: number;
