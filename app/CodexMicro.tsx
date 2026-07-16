@@ -40,98 +40,98 @@ export const CONTROL_SPECS: readonly ControlSpec[] = [
     id: "joystick",
     kind: "joystick",
     asset: "joystick.webp",
-    rect: { x: 0.170654, y: 0.145933, width: 0.133971, height: 0.133971 },
+    rect: { x: 0.15564, y: 0.130919, width: 0.164, height: 0.164 },
     ariaLabel: "Move joystick",
   },
   {
     id: "agent-1",
     kind: "agent-key",
-    asset: "agent.webp",
-    rect: { x: 0.339713, y: 0.151515, width: 0.136364, height: 0.144338 },
+    asset: "agent-translucent.webp",
+    rect: { x: 0.329395, y: 0.142684, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 1",
   },
   {
     id: "agent-2",
     kind: "agent-key",
-    asset: "agent.webp",
-    rect: { x: 0.515949, y: 0.151515, width: 0.136364, height: 0.144338 },
+    asset: "agent-translucent.webp",
+    rect: { x: 0.505631, y: 0.142684, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 2",
   },
   {
     id: "dial",
     kind: "dial",
     asset: "dial.webp",
-    rect: { x: 0.700957, y: 0.161085, width: 0.11563, height: 0.11563 },
+    rect: { x: 0.694272, y: 0.1544, width: 0.129, height: 0.129 },
     ariaLabel: "Rotate dial",
   },
   {
     id: "agent-3",
     kind: "agent-key",
-    asset: "agent.webp",
-    rect: { x: 0.167464, y: 0.318182, width: 0.136364, height: 0.144338 },
+    asset: "agent-translucent.webp",
+    rect: { x: 0.157146, y: 0.309351, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 3",
   },
   {
     id: "agent-4",
     kind: "agent-key",
-    asset: "agent.webp",
-    rect: { x: 0.338916, y: 0.318182, width: 0.136364, height: 0.144338 },
+    asset: "agent-translucent.webp",
+    rect: { x: 0.328598, y: 0.309351, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 4",
   },
   {
     id: "agent-5",
     kind: "agent-key",
-    asset: "agent.webp",
-    rect: { x: 0.515152, y: 0.318182, width: 0.136364, height: 0.144338 },
+    asset: "agent-translucent.webp",
+    rect: { x: 0.504834, y: 0.309351, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 5",
   },
   {
     id: "agent-6",
     kind: "agent-key",
-    asset: "agent.webp",
-    rect: { x: 0.6874, y: 0.318182, width: 0.136364, height: 0.144338 },
+    asset: "agent-translucent.webp",
+    rect: { x: 0.677082, y: 0.309351, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 6",
   },
   {
     id: "lightning",
     kind: "command-key",
     asset: "lightning.webp",
-    rect: { x: 0.167464, y: 0.484849, width: 0.136364, height: 0.147528 },
+    rect: { x: 0.155146, y: 0.476113, width: 0.161, height: 0.165 },
     ariaLabel: "Lightning key",
   },
   {
     id: "check",
     kind: "command-key",
     asset: "check.webp",
-    rect: { x: 0.338916, y: 0.484849, width: 0.136364, height: 0.147528 },
+    rect: { x: 0.326598, y: 0.476113, width: 0.161, height: 0.165 },
     ariaLabel: "Check key",
   },
   {
     id: "cancel",
     kind: "command-key",
     asset: "x.webp",
-    rect: { x: 0.515152, y: 0.484849, width: 0.136364, height: 0.147528 },
+    rect: { x: 0.502834, y: 0.476113, width: 0.161, height: 0.165 },
     ariaLabel: "Cancel key",
   },
   {
     id: "expand",
     kind: "command-key",
     asset: "expand.webp",
-    rect: { x: 0.6874, y: 0.484849, width: 0.136364, height: 0.147528 },
+    rect: { x: 0.675082, y: 0.476113, width: 0.161, height: 0.165 },
     ariaLabel: "Expand key",
   },
   {
     id: "microphone",
     kind: "command-key",
     asset: "space.webp",
-    rect: { x: 0.336523, y: 0.658692, width: 0.317384, height: 0.145933 },
+    rect: { x: 0.320715, y: 0.644659, width: 0.349, height: 0.174 },
     ariaLabel: "Microphone key",
   },
   {
     id: "assistant",
     kind: "command-key",
     asset: "assistant.webp",
-    rect: { x: 0.686603, y: 0.658692, width: 0.139553, height: 0.145933 },
+    rect: { x: 0.67588, y: 0.649159, width: 0.161, height: 0.165 },
     ariaLabel: "Assistant key",
   },
   {
@@ -340,16 +340,13 @@ function normalizedDelta(angle: number) {
 
 function DialControl({ spec, audio }: { spec: ControlSpec; audio: AudioControls }) {
   const [rotation, setRotation] = useState(0);
-  const [pressed, setPressed] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const drag = useRef<{
     pointerId: number;
-    startAngle: number;
-    startRotation: number;
-    startX: number;
-    startY: number;
+    lastAngle: number;
+    rawRotation: number;
     lastStep: number;
   } | null>(null);
-  const clickTimer = useRef<number | null>(null);
 
   const step = useCallback(
     (direction: number) => {
@@ -357,13 +354,6 @@ function DialControl({ spec, audio }: { spec: ControlSpec; audio: AudioControls 
       audio.play("tick");
     },
     [audio],
-  );
-
-  useEffect(
-    () => () => {
-      if (clickTimer.current !== null) window.clearTimeout(clickTimer.current);
-    },
-    [],
   );
 
   const ariaRotation = ((rotation % 360) + 360) % 360;
@@ -376,7 +366,7 @@ function DialControl({ spec, audio }: { spec: ControlSpec; audio: AudioControls 
     <div
       role="slider"
       tabIndex={0}
-      className={`control dial-control ${pressed ? "is-pressed" : ""}`}
+      className={`control dial-control ${dragging ? "is-dragging" : ""}`}
       style={style}
       aria-label={spec.ariaLabel}
       aria-valuemin={0}
@@ -391,24 +381,21 @@ function DialControl({ spec, audio }: { spec: ControlSpec; audio: AudioControls 
         audio.unlock();
         const target = event.currentTarget;
         target.setPointerCapture(event.pointerId);
+        setDragging(true);
         drag.current = {
           pointerId: event.pointerId,
-          startAngle: angleAt(event, target),
-          startRotation: rotation,
-          startX: event.clientX,
-          startY: event.clientY,
+          lastAngle: angleAt(event, target),
+          rawRotation: rotation,
           lastStep: rotation,
         };
       }}
       onPointerMove={(event) => {
         const currentDrag = drag.current;
         if (!currentDrag || currentDrag.pointerId !== event.pointerId) return;
-        const next =
-          Math.round(
-            (currentDrag.startRotation +
-              normalizedDelta(angleAt(event, event.currentTarget) - currentDrag.startAngle)) /
-              12,
-          ) * 12;
+        const currentAngle = angleAt(event, event.currentTarget);
+        currentDrag.rawRotation += normalizedDelta(currentAngle - currentDrag.lastAngle);
+        currentDrag.lastAngle = currentAngle;
+        const next = Math.round(currentDrag.rawRotation / 12) * 12;
         if (next !== currentDrag.lastStep) {
           currentDrag.lastStep = next;
           setRotation(next);
@@ -418,20 +405,16 @@ function DialControl({ spec, audio }: { spec: ControlSpec; audio: AudioControls 
       onPointerUp={(event) => {
         const currentDrag = drag.current;
         if (!currentDrag || currentDrag.pointerId !== event.pointerId) return;
-        const distance = Math.hypot(event.clientX - currentDrag.startX, event.clientY - currentDrag.startY);
         drag.current = null;
-        if (distance < 6) {
-          setPressed(true);
-          audio.play("press");
-          if (clickTimer.current !== null) window.clearTimeout(clickTimer.current);
-          clickTimer.current = window.setTimeout(() => {
-            setPressed(false);
-            audio.play("release");
-          }, 105);
-        }
+        setDragging(false);
       }}
       onPointerCancel={() => {
         drag.current = null;
+        setDragging(false);
+      }}
+      onLostPointerCapture={() => {
+        drag.current = null;
+        setDragging(false);
       }}
       onWheel={(event: ReactWheelEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -444,17 +427,6 @@ function DialControl({ spec, audio }: { spec: ControlSpec; audio: AudioControls 
         } else if (event.key === "ArrowLeft" || event.key === "ArrowDown") {
           event.preventDefault();
           step(-1);
-        } else if ((event.key === "Enter" || event.key === " ") && !event.repeat) {
-          event.preventDefault();
-          setPressed(true);
-          audio.play("press");
-        }
-      }}
-      onKeyUp={(event) => {
-        if ((event.key === "Enter" || event.key === " ") && pressed) {
-          event.preventDefault();
-          setPressed(false);
-          audio.play("release");
         }
       }}
     >
@@ -467,16 +439,24 @@ function DialControl({ spec, audio }: { spec: ControlSpec; audio: AudioControls 
 
 function JoystickControl({ spec, audio }: { spec: ControlSpec; audio: AudioControls }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [lastDragOffset, setLastDragOffset] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
-  const pointerId = useRef<number | null>(null);
+  const drag = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    startOffset: { x: number; y: number };
+    moved: boolean;
+  } | null>(null);
   const returnTimer = useRef<number | null>(null);
 
   const reset = useCallback(
     (withSound = true) => {
-      pointerId.current = null;
+      const moved = drag.current?.moved ?? false;
+      drag.current = null;
       setDragging(false);
       setOffset({ x: 0, y: 0 });
-      if (withSound) audio.play("release");
+      if (withSound && moved) audio.play("release");
     },
     [audio],
   );
@@ -506,37 +486,59 @@ function JoystickControl({ spec, audio }: { spec: ControlSpec; audio: AudioContr
 
   return (
     <div
-      role="button"
+      role="application"
       tabIndex={0}
-      className={`control joystick-control ${dragging ? "is-dragging is-pressed" : ""}`}
+      className={`control joystick-control ${dragging ? "is-dragging" : ""}`}
       style={style}
       aria-label={spec.ariaLabel}
+      aria-roledescription="two-axis joystick"
       data-control-id={spec.id}
       data-offset-x={Math.round(offset.x)}
       data-offset-y={Math.round(offset.y)}
+      data-last-drag-x={Math.round(lastDragOffset.x)}
+      data-last-drag-y={Math.round(lastDragOffset.y)}
       onPointerDown={(event) => {
         if (event.pointerType === "mouse" && event.button !== 0) return;
         event.preventDefault();
-        pointerId.current = event.pointerId;
+        audio.unlock();
+        drag.current = {
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          startOffset: offset,
+          moved: false,
+        };
         event.currentTarget.setPointerCapture(event.pointerId);
         setDragging(true);
-        audio.play("press");
       }}
       onPointerMove={(event) => {
-        if (pointerId.current !== event.pointerId) return;
+        const currentDrag = drag.current;
+        if (!currentDrag || currentDrag.pointerId !== event.pointerId) return;
         const rect = event.currentTarget.getBoundingClientRect();
-        let x = event.clientX - (rect.left + rect.width / 2);
-        let y = event.clientY - (rect.top + rect.height / 2);
+        let x = currentDrag.startOffset.x + event.clientX - currentDrag.startX;
+        let y = currentDrag.startOffset.y + event.clientY - currentDrag.startY;
         const radius = Math.min(rect.width, rect.height) * 0.16;
         const distance = Math.hypot(x, y);
         if (distance > radius) {
           x = (x / distance) * radius;
           y = (y / distance) * radius;
         }
+        if (!currentDrag.moved && Math.hypot(x, y) > 1.5) {
+          currentDrag.moved = true;
+          audio.play("press");
+        }
         setOffset({ x, y });
+        setLastDragOffset({ x, y });
       }}
-      onPointerUp={() => reset(true)}
-      onPointerCancel={() => reset(true)}
+      onPointerUp={(event) => {
+        if (drag.current?.pointerId === event.pointerId) reset(true);
+      }}
+      onPointerCancel={(event) => {
+        if (drag.current?.pointerId === event.pointerId) reset(true);
+      }}
+      onLostPointerCapture={() => {
+        if (drag.current) reset(true);
+      }}
       onKeyDown={(event: ReactKeyboardEvent<HTMLDivElement>) => {
         const amount = 7;
         if (event.key === "ArrowLeft") {
@@ -551,16 +553,6 @@ function JoystickControl({ spec, audio }: { spec: ControlSpec; audio: AudioContr
         } else if (event.key === "ArrowDown") {
           event.preventDefault();
           nudge(0, amount);
-        } else if ((event.key === "Enter" || event.key === " ") && !event.repeat) {
-          event.preventDefault();
-          setDragging(true);
-          audio.play("press");
-        }
-      }}
-      onKeyUp={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          reset(true);
         }
       }}
     >

@@ -164,6 +164,10 @@ main {
   transition: opacity 240ms ease-out;
 }
 
+.agent-key img {
+  filter: brightness(1.035) contrast(0.94);
+}
+
 .agent-key.is-glowing .control-visual::before {
   opacity: 0.92;
 }
@@ -184,9 +188,19 @@ main {
   filter: drop-shadow(0 3px 2px rgba(18, 20, 22, 0.24));
 }
 
-.dial-control.is-pressed .control-visual {
-  --press-scale: 0.972;
-  filter: brightness(0.92) drop-shadow(0 1px 1px rgba(18, 20, 22, 0.2));
+.dial-control,
+.joystick-control {
+  cursor: grab;
+}
+
+.dial-control.is-dragging,
+.joystick-control.is-dragging {
+  cursor: grabbing;
+}
+
+.dial-control.is-dragging .control-visual {
+  transition-duration: 0ms;
+  filter: drop-shadow(0 2px 1.5px rgba(18, 20, 22, 0.22));
 }
 
 .dial-control img,
@@ -201,9 +215,8 @@ main {
 }
 
 .joystick-control.is-dragging .control-visual {
-  --press-scale: 0.985;
   transition-duration: 0ms;
-  filter: drop-shadow(0 1px 1px rgba(55, 60, 64, 0.14));
+  filter: drop-shadow(0 2px 1.5px rgba(55, 60, 64, 0.16));
 }
 
 .touch-control .control-visual {
@@ -286,8 +299,4 @@ main {
     transform: translateY(1px) scale(0.993);
   }
 
-  .joystick-control .control-visual {
-    --joystick-x: 0px !important;
-    --joystick-y: 0px !important;
-  }
 }
