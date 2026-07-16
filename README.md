@@ -7,8 +7,8 @@ I couldn’t afford the real thing, so I made this instead. Nothing special—it
 ## Controls
 
 - 12 keys: click, touch, `Enter`, or `Space`
-- Black dial: drag, mouse wheel, or arrow keys
-- White joystick: drag or arrow keys
+- White knob: drag, mouse wheel, or arrow keys to rotate
+- Black jog: drag or arrow keys to move
 - Touch sensor: click, touch, `Enter`, or `Space`
 - Audio starts only after the first user gesture
 

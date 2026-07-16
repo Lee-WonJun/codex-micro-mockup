@@ -31,9 +31,11 @@ test("server-renders the complete controller", async () => {
   assert.match(html, /<title>Codex Micro Clicker<\/title>/i);
   assert.match(html, /data-controller="codex-micro"/);
   assert.match(html, /aria-label="Agent key 1"/);
-  assert.match(html, /aria-label="Rotate dial"/);
-  assert.match(html, /aria-label="Move joystick"/);
+  assert.match(html, /aria-label="Rotate knob"/);
+  assert.match(html, /aria-label="Move jog"/);
   assert.match(html, /aria-label="Tap sensor"/);
+  assert.match(html, /agent-cap\.webp/);
+  assert.match(html, /agent-switch\.webp/);
 
   const controls = html.match(/data-control-id=/g) ?? [];
   assert.equal(controls.length, 15);

@@ -149,9 +149,32 @@ main {
   filter: brightness(0.985) drop-shadow(0 1px 1px rgba(38, 46, 51, 0.18));
 }
 
-.agent-key .control-visual::before {
+.agent-switch-layer {
   position: absolute;
   z-index: 1;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.agent-switch-layer > img {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.agent-key .control-visual {
+  z-index: 2;
+}
+
+.agent-key .agent-switch-layer::before {
+  position: absolute;
+  z-index: 0;
   inset: 12%;
   border-radius: 27%;
   background: var(--glow-color, transparent);
@@ -168,7 +191,7 @@ main {
   filter: brightness(1.035) contrast(0.94);
 }
 
-.agent-key.is-glowing .control-visual::before {
+.agent-key.is-glowing .agent-switch-layer::before {
   opacity: 0.92;
 }
 
@@ -287,7 +310,7 @@ main {
 @media (prefers-reduced-motion: reduce) {
   .controller::after,
   .control-visual,
-  .agent-key .control-visual::before,
+  .agent-key .agent-switch-layer::before,
   .dial-control .control-visual,
   .joystick-control .control-visual,
   .touch-control .control-visual,

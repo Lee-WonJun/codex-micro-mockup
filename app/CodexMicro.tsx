@@ -37,58 +37,58 @@ export type ControlSpec = {
 
 export const CONTROL_SPECS: readonly ControlSpec[] = [
   {
-    id: "joystick",
-    kind: "joystick",
+    id: "knob",
+    kind: "dial",
     asset: "joystick.webp",
     rect: { x: 0.15564, y: 0.130919, width: 0.164, height: 0.164 },
-    ariaLabel: "Move joystick",
+    ariaLabel: "Rotate knob",
   },
   {
     id: "agent-1",
     kind: "agent-key",
-    asset: "agent-translucent.webp",
+    asset: "agent-cap.webp",
     rect: { x: 0.329395, y: 0.142684, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 1",
   },
   {
     id: "agent-2",
     kind: "agent-key",
-    asset: "agent-translucent.webp",
+    asset: "agent-cap.webp",
     rect: { x: 0.505631, y: 0.142684, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 2",
   },
   {
-    id: "dial",
-    kind: "dial",
+    id: "jog",
+    kind: "joystick",
     asset: "dial.webp",
     rect: { x: 0.694272, y: 0.1544, width: 0.129, height: 0.129 },
-    ariaLabel: "Rotate dial",
+    ariaLabel: "Move jog",
   },
   {
     id: "agent-3",
     kind: "agent-key",
-    asset: "agent-translucent.webp",
+    asset: "agent-cap.webp",
     rect: { x: 0.157146, y: 0.309351, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 3",
   },
   {
     id: "agent-4",
     kind: "agent-key",
-    asset: "agent-translucent.webp",
+    asset: "agent-cap.webp",
     rect: { x: 0.328598, y: 0.309351, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 4",
   },
   {
     id: "agent-5",
     kind: "agent-key",
-    asset: "agent-translucent.webp",
+    asset: "agent-cap.webp",
     rect: { x: 0.504834, y: 0.309351, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 5",
   },
   {
     id: "agent-6",
     kind: "agent-key",
-    asset: "agent-translucent.webp",
+    asset: "agent-cap.webp",
     rect: { x: 0.677082, y: 0.309351, width: 0.157, height: 0.162 },
     ariaLabel: "Agent key 6",
   },
@@ -316,6 +316,11 @@ function KeyControl({
         if (event.detail === 0 && !pressed) pulseForAssistiveClick();
       }}
     >
+      {spec.kind === "agent-key" ? (
+        <span className="agent-switch-layer" aria-hidden="true">
+          <img src={assetUrl("agent-switch.webp")} alt="" draggable={false} />
+        </span>
+      ) : null}
       <span className="control-visual">
         <img src={assetUrl(spec.asset)} alt="" draggable={false} />
       </span>
@@ -491,7 +496,7 @@ function JoystickControl({ spec, audio }: { spec: ControlSpec; audio: AudioContr
       className={`control joystick-control ${dragging ? "is-dragging" : ""}`}
       style={style}
       aria-label={spec.ariaLabel}
-      aria-roledescription="two-axis joystick"
+      aria-roledescription="two-axis jog control"
       data-control-id={spec.id}
       data-offset-x={Math.round(offset.x)}
       data-offset-y={Math.round(offset.y)}
@@ -627,11 +632,11 @@ export function CodexMicro() {
 
       lastGlow.current = { id, colorName: color.name };
       setGlow({ id, color: color.value });
-      clearTimer = window.setTimeout(() => setGlow(null), 1500);
-      lightTimer = window.setTimeout(trigger, 8000 + Math.random() * 6000);
+      clearTimer = window.setTimeout(() => setGlow(null), 1800);
+      lightTimer = window.setTimeout(trigger, 4000 + Math.random() * 3000);
     };
 
-    lightTimer = window.setTimeout(trigger, 8000 + Math.random() * 6000);
+    lightTimer = window.setTimeout(trigger, 2200 + Math.random() * 1800);
     return () => {
       window.clearTimeout(lightTimer);
       window.clearTimeout(clearTimer);
